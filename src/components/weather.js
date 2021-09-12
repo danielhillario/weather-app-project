@@ -17,17 +17,18 @@ function Weather() {
             let aCity = document.querySelector("a#cityName");
             aCity.innerHTML = `${nCity}, ${cCountry}`;
 
-            const dateTimeArr = [];
-            const weekDayArr = [];
-            const dtArr = [];
-            const timeArr = [];
+            const dataObjArr = [];
 
+            // forEach for accessing the fetched data and store them in an array
             data.list.forEach(function (list) {
+                // Time
                 let unixTimeStamp = list.dt;
                 const mSeconds = unixTimeStamp * 1000;
                 const dateObject = new Date(mSeconds);
                 const newDateFormat = dateObject.toLocaleString();
-                // console.log(newDateFormat);
+                
+                let mainTemp = list.main.temp;
+                let 
                 
                 const dateTime = dateObject.toLocaleString("en-GB", {
                     weekday: "long",
@@ -39,60 +40,37 @@ function Weather() {
                     second: "numeric",
                 });
                 
-                dateTimeArr.push(dateTime);
+                dataObjArr.push(
+                    {
+                        time: dateTime,
+                        temp: mainTemp,
+                    });
 
-                // const weekDay = dateObject.toLocaleString("en-GB", {
-                //     weekday: "long",
-                // });
-
-                // weekDayArr.push(weekDay);
-
-                // const date = dateObject.toLocaleString("en-GB", {
-                //     month: "long",
-                //     day: "numeric",
-                //     year: "numeric",
-                // });
+                // Temperature
                 
-                // dtArr.push(date);
-
-                // const time = dateObject.toLocaleString("en-GB", {
-                //     hour: "numeric",
-                //     minute: "numeric",
-                //     second: "numeric",
-                // });
-                
-                // timeArr.push(time);
-
             }) // End of function
 
-            // console.log(dateTimeArr);
-            const date = [];
-            for (let i = 0; i < dateTimeArr.length; i += 1){
-                if (dateTimeArr[i].match("08:00:00") !== null) {
-                    date.push(dateTimeArr[i]);
-                }
-            }
-
-            console.log(date);
-
-            // console.log(weekDayArr);
-            // console.log(dtArr);
-            // console.log(timeArr);
+            let dateColumn = document.querySelector("div#dateColumn");
+            dateColumn.innerHTML = "";
+            // for (let j = 0; j < date.length; j += 1){
+                for (let i = 0; i < dataObjArr.length; i += 1){
+                    if (dataObjArr[i].time.match("08:00:00") !== null) {
+                        let divCol = document.createElement("div");
+                        divCol.className = "col";
+                        divCol.innerHTML = `
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${dataObjArr[i].time}</h5>
+                                    <p class="card-text">Temperature: ${dataObjArr[i].temp}\u2103</p>
+                                </div>
+                            </div>       
+                        `; // End of innerhtml
+                        dateColumn.append(divCol);
+                
+            // } // End of for loop
+                    }
+                }               
             
-            // for (let i = 0; i < timeArr.length; i += 1){
-            //     if (timeArr[i] === "") {
-                    
-            //     }
-            // }
-
-            // for (let i = 0; i < dtArr.length; i += 1){
-            //     //console.log(`This ran i ${i}`);
-            //     for (let j = 0; j < dtArr[i].length; j += 1){
-            //         if (dtArr[i][j] === "Monday") {
-            //             console.log(`Weekday: ${dtArr[i][j]}`);
-            //         }
-            //     }
-            // }
         }
     }
         
@@ -141,153 +119,7 @@ function Weather() {
             </div>
             
             <div className="container-fluid pt-1">               
-                <div className="row row-cols-1 row-cols-md-2 g-4">
-                    
-                    <div className="col">
-                        <div className="card h-100">
-                            {/* image goes here */}
-                            <div className="card-body">
-                                <h5 className="card-title" id="date1">Date-1</h5>
-                                <p className="card-text">3-Hour-Forecast</p>
-                                <div className="row row-cols-3">                                        
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>First 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                                <div className="card">
-                                                    <p>Second 3-hour</p>
-                                                </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                                <div className="card">
-                                                    <p>Third 3-hour</p>
-                                                </div>                                        
-                                        </div>                                                                            
-                                    </div>
-                            </div>
-                        </div>
-                    </div> {/* End of column 1 */}
-
-                    <div className="col">
-                        <div className="card h-100">
-                            {/* image goes here */}
-                            <div className="card-body">
-                                <h5 className="card-title" id="date2">Date-2</h5>
-                                <p className="card-text">3-Hour-Forecast</p>
-
-                                <div className="row row-cols-3">                                        
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>First 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                                <div className="card">
-                                                    <p>Second 3-hour</p>
-                                                </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                                <div className="card">
-                                                    <p>Third 3-hour</p>
-                                                </div>                                        
-                                        </div>                                                                            
-                                    </div>
-                            </div>
-                        </div>
-                    </div> {/* End of column 2 */}
-                
-                    <div className="col">
-                        <div className="card h-100">
-                            {/* image goes here */}
-                            <div className="card-body">
-                                <h5 className="card-title" id="date3">Date-3</h5>
-                                <p className="card-text">3-Hour-Forecast</p>
-                                    <div className="row row-cols-3">                                        
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>First 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>Second 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>Third 3-hour</p>
-                                            </div>                                        
-                                        </div>                                                                            
-                                    </div>
-                            </div>
-                        </div>
-                    </div> {/* End of column 3 */}
-                
-                <div className="col">
-                        <div className="card h-100">
-                            {/* image goes here */}
-                            <div className="card-body">
-                                <h5 className="card-title" id="date4">Date-4</h5>
-                                <p className="card-text">3-Hour-Forecast</p>
-                                <div className="row row-cols-3">                                        
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>First 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>Second 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>Third 3-hour</p>
-                                            </div>                                        
-                                        </div>                                                                            
-                                    </div>
-                            </div>
-                        </div>
-                </div> {/* End of column 4 */}
-
-                <div className="col">
-                    <div className="card h-100">
-                        {/* image goes here */}
-                        <div className="card-body">
-                            <h5 className="card-title" id="date5">Date-5</h5>
-                                <p className="card-text">3-Hour-Forecast</p>
-                                <div className="row row-cols-3">                                        
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>First 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>Second 3-hour</p>
-                                            </div>                                        
-                                        </div>
-                                    
-                                        <div className="col">
-                                            <div className="card">
-                                                <p>Third 3-hour</p>
-                                            </div>                                        
-                                        </div>                                                                            
-                                    </div>
-                        </div>
-                    </div>
-                </div> {/* End of column 5 */}
+                <div className="row row-cols-1 row-cols-md-2 g-4" id="dateColumn">
 
                 </div>
             </div>
