@@ -36,8 +36,8 @@ function Weather() {
                     day: "numeric",
                     year: "numeric",
                     hour: "numeric",
+                    hour12: "true",
                     minute: "numeric",
-                    second: "numeric",
                 });
                 
                 dataObjArr.push(
@@ -49,12 +49,12 @@ function Weather() {
                 // Temperature
                 
             }) // End of function
-
+            
             let dateColumn = document.querySelector("div#dateColumn");
             dateColumn.innerHTML = "";
             // for (let j = 0; j < date.length; j += 1){
                 for (let i = 0; i < dataObjArr.length; i += 1){
-                    if (dataObjArr[i].time.match("08:00:00") !== null) {
+                    if (dataObjArr[i].time.match("8:00 am") !== null) {
                         let divCol = document.createElement("div");
                         divCol.className = "col";
                         divCol.innerHTML = `
