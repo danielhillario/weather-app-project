@@ -1,3 +1,7 @@
 body {
   padding-top: 65px;
 }
+
+#weatherMap {
+  height: 480px;
+}
