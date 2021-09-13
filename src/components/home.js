@@ -5,34 +5,28 @@ const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 
 function Home() {
 
-    const [weather, setWeather] = useState(null);
+    const [data, setData] = useState(null);
 
-    function handleWeatherData(data) {
-        if (data != null) {
-            console.log(data);
-        }
+    if (data != null) {
+        console.log(data);
     }
-
-    handleWeatherData(weather);
-
-    navigator.geolocation.getCurrentPosition(fetchLocation);
-
+    
     const latlon = [];
-
-    function fetchLocation(pos) {
-        let crd = pos.coords;
-        
-        let lat = crd.latitude;
-        let lon = crd.longitude;
+    navigator.geolocation.getCurrentPosition(function (pos) {
+        let lat = pos.coords.latitude;
+        let lon = pos.coords.longitude;
 
         latlon.push(lat, lon);
-    }
 
-    
+    });
 
-    useEffect(function () {
-        
-        const myMap = Leaf.map('weatherMap').setView([0,0], 2);
+    useEffect(async function () {
+        let lat = latlon[0];
+        let lon = latlon[1];
+
+        console.log(lat, lon);
+
+        const myMap = Leaf.map('weatherMap').setView([lat, lon], 2);
         const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
         const tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         const tiles = Leaf.tileLayer(tileURL, { crossOrigin: "true", attribution });
@@ -43,33 +37,49 @@ function Home() {
         });
 
         tiles.addTo(myMap);
-        Leaf.marker([2,103], {icon: mapIcon}).addTo(myMap);
-    }); // End of useEffect for leaflet map
-        
+        Leaf.marker([lat, lon], { icon: mapIcon }).addTo(myMap);
+    }, []); // End of useEffect for leaflet map
+    
 
-        // let openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?`;
-        // let query = `lat=2&lon=102&appid=${openWeatherApiKey}&units=metric`;
-        
-        // fetch(openWeatherUrl + query, {
-        //     method: "GET",
-        // }).then(function (res) {
-        //     return res.json();
-        // }).then(function (weatherData) {
-        //     setWeather(weatherData);
-        // });    
+    useEffect(async function () {
+        const abortController = new AbortController();
 
+        let lat = latlon[0];
+        let lon = latlon[1];
+
+        let openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?`;
+        let query = `lat=${lat}&lon=${lon}&appid=${openWeatherApiKey}&units=metric`;
+        let mounted = true;
+        fetch(openWeatherUrl + query, {
+            signal: abortController.signal,
+            method: "GET",
+        }).then(function (res) {
+            return res.json();
+        }).then(function (weatherData) {
+            setData(weatherData);
+        });
+
+        return function () {
+            abortController.abort();
+        }
+    
+    }, []);
+    
 
     return (
         <div className="container">
-            <div id="weatherMap"></div>
+            <div className="row">
+                <div className="col-7">
+                    <div id="weatherMap"></div>
+                </div>
 
-            <div className="container d-flex justify-content-center pt-3 w-75">
-                <h3>Current weather here</h3>
-            </div>
+                <div className="col">
+                    <div className="container d-flex justify-content-center pt-3 w-75">
+                    <h3>Current weather here</h3>
+                    </div>
+                </div>
+            </div> 
         </div>
-            
-
-    
     )    
 }
 
