@@ -28,7 +28,9 @@ function Weather() {
                 const newDateFormat = dateObject.toLocaleString();
                 
                 let mainTemp = list.main.temp;
-                let 
+                let feelTemp = list.main.feels_like;
+                let forecastWeather = list.weather[0].main;
+                let descWeather = list.weather[0].description;
                 
                 const dateTime = dateObject.toLocaleString("en-GB", {
                     weekday: "long",
@@ -38,30 +40,41 @@ function Weather() {
                     hour: "numeric",
                     hour12: "true",
                     minute: "numeric",
-                });
+                }); // End of dateObject
                 
                 dataObjArr.push(
                     {
                         time: dateTime,
                         temp: mainTemp,
-                    });
+                        feel: feelTemp,
+                        fWeather: forecastWeather,
+                        dWeather: descWeather,
+                    }); // End of array push method
 
                 // Temperature
                 
-            }) // End of function
+            }) // End of forEach initialization
+
+            String.prototype.capitalize = function () {
+                return this.charAt(0).toUpperCase() + this.slice(1);
+            }
             
             let dateColumn = document.querySelector("div#dateColumn");
             dateColumn.innerHTML = "";
             // for (let j = 0; j < date.length; j += 1){
-                for (let i = 0; i < dataObjArr.length; i += 1){
-                    if (dataObjArr[i].time.match("8:00 am") !== null) {
+            for (let i = 0; i < dataObjArr.length; i += 1){
+                    // console.log(dataObjArr[i].time)
+                    if (dataObjArr[i].time.match("11:00 am") !== null) {
                         let divCol = document.createElement("div");
                         divCol.className = "col";
                         divCol.innerHTML = `
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5 class="card-title">${dataObjArr[i].time}</h5>
-                                    <p class="card-text">Temperature: ${dataObjArr[i].temp}\u2103</p>
+                                    <p class="card-text">Temperature ${dataObjArr[i].temp}\u2103</p>
+                                    <p class="card-text">Feels Like ${dataObjArr[i].feel}\u2103</p>
+                                    <p class="card-text">Forecasted Weather: ${dataObjArr[i].fWeather}</p>
+                                    <p class="card-text">Description: ${dataObjArr[i].dWeather.capitalize()}</p>
                                 </div>
                             </div>       
                         `; // End of innerhtml
@@ -115,7 +128,7 @@ function Weather() {
             </div>
 
             <div className="container-fluid w-100">
-                    <a className="d-flex justify-content-center" id="cityName">City Name</a>
+                    <a className="d-flex justify-content-center" id="cityName"></a>
             </div>
             
             <div className="container-fluid pt-1">               

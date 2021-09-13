@@ -1,10 +1,38 @@
 const { useState, useEffect } = require("react");
 const Leaf = require("leaflet");
 
+const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
+
 function Home() {
+
+    const [weather, setWeather] = useState(null);
+
+    function handleWeatherData(data) {
+        if (data != null) {
+            console.log(data);
+        }
+    }
+
+    handleWeatherData(weather);
+
+    navigator.geolocation.getCurrentPosition(fetchLocation);
+
+    const latlon = [];
+
+    function fetchLocation(pos) {
+        let crd = pos.coords;
+        
+        let lat = crd.latitude;
+        let lon = crd.longitude;
+
+        latlon.push(lat, lon);
+    }
+
+    
+
     useEffect(function () {
         
-        const myMap = Leaf.map('weatherMap').setView([0, 0], 2);
+        const myMap = Leaf.map('weatherMap').setView([0,0], 2);
         const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
         const tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         const tiles = Leaf.tileLayer(tileURL, { crossOrigin: "true", attribution });
@@ -15,9 +43,21 @@ function Home() {
         });
 
         tiles.addTo(myMap);
-        Leaf.marker([0,0], {icon: mapIcon}).addTo(myMap);
-    });
+        Leaf.marker([2,103], {icon: mapIcon}).addTo(myMap);
+    }); // End of useEffect for leaflet map
         
+
+        // let openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?`;
+        // let query = `lat=2&lon=102&appid=${openWeatherApiKey}&units=metric`;
+        
+        // fetch(openWeatherUrl + query, {
+        //     method: "GET",
+        // }).then(function (res) {
+        //     return res.json();
+        // }).then(function (weatherData) {
+        //     setWeather(weatherData);
+        // });    
+
 
     return (
         <div className="container">
