@@ -6,9 +6,14 @@ const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 function Home() {
 
     const [data, setData] = useState(null);
+    const [time, setTime] = useState(0);
 
+    let divCurrWeather = document.querySelector("div#currentweather");
     if (data != null) {
-        console.log(data);
+        let currCity = data.name;
+        let currTitle = document.createElement("h3");
+        currTitle.innerHTML = `Current ${currCity} Weather`;
+        divCurrWeather.append(currTitle);
     }
     
     const latlon = [];
@@ -21,10 +26,14 @@ function Home() {
     });
 
     useEffect(async function () {
+        setTimeout(function () {
+            setTime(time + 1);
+        }, 1000);
+
         let lat = latlon[0];
         let lon = latlon[1];
 
-        console.log(lat, lon);
+        // console.log(lat, lon);
 
         const myMap = Leaf.map('weatherMap').setView([lat, lon], 2);
         const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
@@ -38,7 +47,7 @@ function Home() {
 
         tiles.addTo(myMap);
         Leaf.marker([lat, lon], { icon: mapIcon }).addTo(myMap);
-    }, []); // End of useEffect for leaflet map
+    }, [time]); // End of useEffect for leaflet map
     
 
     useEffect(async function () {
@@ -74,8 +83,8 @@ function Home() {
                 </div>
 
                 <div className="col">
-                    <div className="container d-flex justify-content-center pt-3 w-75">
-                    <h3>Current weather here</h3>
+                    <div className="container d-flex justify-content-center pt-3 w-75" id="currentweather">
+                    
                     </div>
                 </div>
             </div> 
