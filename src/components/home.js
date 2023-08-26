@@ -1,5 +1,5 @@
 const { useState, useEffect } = require("react");
-const Leaf = require("leaflet");
+//const Leaf = require("leaflet");
 
 const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 
@@ -17,38 +17,12 @@ function Home() {
     }
     
     const latlon = [];
-    navigator.geolocation.getCurrentPosition(function (pos) {
-        let lat = pos.coords.latitude;
-        let lon = pos.coords.longitude;
-
-        latlon.push(lat, lon);
-
-    });
-
-    useEffect(async function () {
-        setTimeout(function () {
-            setTime(time + 1);
-        }, 1000);
-
-        let lat = latlon[0];
-        let lon = latlon[1];
-
-        // console.log(lat, lon);
-
-        const myMap = Leaf.map('weatherMap').setView([lat, lon], 2);
-        const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-        const tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        const tiles = Leaf.tileLayer(tileURL, { crossOrigin: "true", attribution });
-
-        const mapIcon = Leaf.divIcon({
-            className: "map-div-icon",
-            html: "<svg xmlns='http://www.w3.org/2000/svg' width='48' height='28' fill='red' class='bi bi-geo-alt-fill' viewBox='0 0 16 16'> <path d='M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z'/> </svg>",
-        });
-
-        tiles.addTo(myMap);
-        Leaf.marker([lat, lon], { icon: mapIcon }).addTo(myMap);
-    }, [time]); // End of useEffect for leaflet map
     
+    let lat = 3.171322;//pos.coords.latitude;
+    let lon = 113.041908;//pos.coords.longitude;
+
+    latlon.push(lat, lon);
+    console.log(latlon);
 
     useEffect(async function () {
         const abortController = new AbortController();
