@@ -6,22 +6,44 @@ const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 function Home() {
 
     const [data, setData] = useState(null);
-    const [time, setTime] = useState(0);
 
     let divCurrWeather = document.querySelector("div#currentweather");
     if (data != null) {
+        console.log(data);
         let currCity = data.name;
         let currTitle = document.createElement("h3");
         currTitle.innerHTML = `Current ${currCity} Weather`;
         divCurrWeather.append(currTitle);
+
+        let unixTimeStamp = data.dt;
+        const mSeconds = unixTimeStamp * 1000;
+        const dateObject = new Date(mSeconds);
+        const newDateFormat = dateObject.toLocaleString(
+            "en-GB",{
+                dateStyle: "long",
+                timeStyle: "medium",
+                hour12: "true"
+            }
+        );
+
+        let divCurrTime = document.querySelector("div#time");
+        let currTime = document.createElement("h4");
+        currTime.innerHTML = `${newDateFormat}`;
+        divCurrTime.append(currTime);
+
     }
     
     const latlon = [];
     
-    let lat = 3.171322;//pos.coords.latitude;
-    let lon = 113.041908;//pos.coords.longitude;
+    
+    function getPosition (position) {
+        const pos = position.coords;
 
-    latlon.push(lat, lon);
+        latlon.push(pos.latitude, pos.longitude);
+    }
+
+    navigator.geolocation.getCurrentPosition(getPosition);
+
     console.log(latlon);
 
     useEffect(async function () {
@@ -52,15 +74,26 @@ function Home() {
     return (
         <div className="container">
             <div className="row">
+
+                <div className="col">
+                    <div className="container d-flex text-center" id="currentweather">
+
+                    </div>
+
+                    <div className="row">
+                        <div className="container text-center" id="time"></div>
+                    </div>
+
+                    <div className="row" id="currWeather">
+                        <div className="container" id="currWeather"></div>
+                    </div>
+
+                </div>
+
                 <div className="col-7">
                     <div id="weatherMap"></div>
                 </div>
-
-                <div className="col">
-                    <div className="container d-flex justify-content-center pt-3 w-75" id="currentweather">
-                    
-                    </div>
-                </div>
+                
             </div> 
         </div>
     )    
