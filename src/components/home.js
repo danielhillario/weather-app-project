@@ -7,29 +7,40 @@ function Home() {
 
     const [data, setData] = useState(null);
 
-    let divCurrWeather = document.querySelector("div#currentweather");
+    let divCurrCity = document.querySelector("div#currentCity");
     if (data != null) {
         console.log(data);
         let currCity = data.name;
-        let currTitle = document.createElement("h3");
+        let currTitle = document.createElement("h5");
         currTitle.innerHTML = `Current ${currCity} Weather`;
-        divCurrWeather.append(currTitle);
-
+        divCurrCity.append(currTitle);
+        
+        //GET time from api
         let unixTimeStamp = data.dt;
         const mSeconds = unixTimeStamp * 1000;
         const dateObject = new Date(mSeconds);
         const newDateFormat = dateObject.toLocaleString(
             "en-GB",{
-                dateStyle: "long",
-                timeStyle: "medium",
+                timeStyle: "short",
                 hour12: "true"
             }
         );
 
-        let divCurrTime = document.querySelector("div#time");
-        let currTime = document.createElement("h4");
-        currTime.innerHTML = `${newDateFormat}`;
-        divCurrTime.append(currTime);
+        //GET current weather condition
+        let currWeather = data.weather;
+        let currWeatherDesc = null;
+
+        for(let i = 0 ; i < currWeather.length; i += 1){
+            currWeatherDesc = currWeather[i].description;
+        }
+        
+        console.log(currWeatherDesc);
+
+        let divCurrWeather = document.querySelector("div#currentWeather");
+        let currentWeather = document.createElement("h6");
+        currentWeather.innerHTML = `${newDateFormat}, ${currWeatherDesc}`;
+        divCurrWeather.append(currentWeather);
+        
 
     }
     
@@ -72,29 +83,17 @@ function Home() {
     
 
     return (
-        <div className="container">
-            <div className="row">
+        <div className="container-fluid">
 
-                <div className="col">
-                    <div className="container d-flex text-center" id="currentweather">
-
-                    </div>
-
-                    <div className="row">
-                        <div className="container text-center" id="time"></div>
-                    </div>
-
-                    <div className="row" id="currWeather">
-                        <div className="container" id="currWeather"></div>
-                    </div>
+            <div className="card" style={{width: '500px'}}>
+                <div className="card-body">
+                    <div className="card-title" id="currentCity"></div>
+                    <div className="card-subtitle mb-2 text-muted" id="currentWeather"></div>
 
                 </div>
 
-                <div className="col-7">
-                    <div id="weatherMap"></div>
-                </div>
-                
-            </div> 
+            </div>
+           
         </div>
     )    
 }
