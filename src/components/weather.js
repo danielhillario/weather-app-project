@@ -10,7 +10,6 @@ function Weather() {
     function handleWeatherData(data) {
         
         if (data !== null) {
-            console.log(data);
             let nCity = data.city.name;
             let cCountry = data.city.country;
             
@@ -25,10 +24,9 @@ function Weather() {
                 let unixTimeStamp = list.dt;
                 const mSeconds = unixTimeStamp * 1000;
                 const dateObject = new Date(mSeconds);
-                const newDateFormat = dateObject.toLocaleString();
                 
-                let mainTemp = list.main.temp;
-                let feelTemp = list.main.feels_like;
+                let mainTemp = Math.round(list.main.temp);
+                let feelTemp = Math.round(list.main.feels_like);
                 let forecastWeather = list.weather[0].main;
                 let descWeather = list.weather[0].description;
                 
@@ -83,7 +81,6 @@ function Weather() {
             // } // End of for loop
                     }
                 }               
-            
         }
     }
         

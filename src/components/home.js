@@ -34,13 +34,26 @@ function Home() {
             currWeatherDesc = currWeather[i].description;
         }
         
-        console.log(currWeatherDesc);
+        let currTemp = Math.round(data.main.temp);
 
         let divCurrWeather = document.querySelector("div#currentWeather");
         let currentWeather = document.createElement("h6");
         currentWeather.innerHTML = `${newDateFormat}, ${currWeatherDesc}`;
         divCurrWeather.append(currentWeather);
+
+        let divCurrTemp = document.querySelector("p#currTemp");
+        divCurrTemp.innerHTML = `${currTemp}`;
         
+        let currHumid = data.main.humidity;
+
+        let divCurrHumid = document.querySelector("a#currentHumidity");
+        divCurrHumid.innerHTML = `${currHumid}% humidity`;
+
+        let currWindSpd = data.wind.speed;
+        currWindSpd = Math.round(currWindSpd * 3.6);
+
+        let divCurrWindSpd = document.querySelector("a#currentWindSpeed");
+        divCurrWindSpd.innerHTML = `${currWindSpd} km/h winds`;
 
     }
     
@@ -54,8 +67,6 @@ function Home() {
     }
 
     navigator.geolocation.getCurrentPosition(getPosition);
-
-    console.log(latlon);
 
     useEffect(async function () {
         const abortController = new AbortController();
@@ -83,17 +94,35 @@ function Home() {
     
 
     return (
-        <div className="container-fluid">
+        <div className="container">
+            <section className="mx-auto my-5" style={{maxWidth: '23rem'}}>
+                <div className="card shadow">
+                    <div className="card-body">
+                        <div className="card-title font-weight-bold" id="currentCity"></div>
+                        <div className="card-subtitle mb-2 text-muted" id="currentWeather"></div>
+                        <div className="d-flex justify-content-between">
+                            <p className="display-1 degree" id="currTemp"></p>
+                            <i className="fas fa-sun fa-5x pt-3 text-warning"></i>
+                        </div>
+                    
+                        <div className="d-flex justify-content-between mb-4">
+                        <p><i className="fas fa-tint fa-lg text-info pe-2"/><a id="currentHumidity" /></p>
+                        <p><i className="fas fa-leaf fa-lg text-muted pe-2"></i><a id="currentWindSpeed" /></p>
+                        </div>
 
-            <div className="card" style={{width: '500px'}}>
-                <div className="card-body">
-                    <div className="card-title" id="currentCity"></div>
-                    <div className="card-subtitle mb-2 text-muted" id="currentWeather"></div>
-
+                    </div>
                 </div>
+            </section>
 
-            </div>
-           
+            <section className="mx-auto mt-5">
+                <div className="card shadow">
+                    <div className="card-body">
+                        <p>A Map!</p>
+                    </div>
+                </div>
+            </section>
+
+
         </div>
     )    
 }

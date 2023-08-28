@@ -1,7 +1,12 @@
 body {
   padding-top: 65px;
+  background-color: #f5f7fa;
 }
 
-#weatherMap {
-  height: 480px;
+.degree:after {
+  content: '°C';
+  position: absolute;
+  font-size: 3rem;
+  margin-top: 0.4rem;
+  font-weight: 400;
 }
