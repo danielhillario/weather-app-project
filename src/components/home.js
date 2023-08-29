@@ -1,11 +1,17 @@
 const { useState, useEffect } = require("react");
-//const Leaf = require("leaflet");
+const Map = require("./map");
 
 const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 
 function Home() {
 
     const [data, setData] = useState(null);
+    const latlon = [3.190075,113.057491];
+    
+    // function getPosition (position) {
+    //     const pos = position.coords;
+    //     latlon.push(pos.latitude, pos.longitude);
+    // }
 
     let divCurrCity = document.querySelector("div#currentCity");
     if (data != null) {
@@ -57,16 +63,15 @@ function Home() {
 
     }
     
-    const latlon = [];
     
-    
-    function getPosition (position) {
-        const pos = position.coords;
+    // navigator.geolocation.getCurrentPosition(getPosition);
 
-        latlon.push(pos.latitude, pos.longitude);
-    }
+    // let map = Leaf.map('map').setView([51.505, -0.09], 13);
+    // Leaf.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // maxZoom: 19,
+    // attribution: '© OpenStreetMap'
+    // }).addTo(map);
 
-    navigator.geolocation.getCurrentPosition(getPosition);
 
     useEffect(async function () {
         const abortController = new AbortController();
@@ -114,13 +119,7 @@ function Home() {
                 </div>
             </section>
 
-            <section className="mx-auto mt-5">
-                <div className="card shadow">
-                    <div className="card-body">
-                        <p>A Map!</p>
-                    </div>
-                </div>
-            </section>
+            <Map />
 
 
         </div>

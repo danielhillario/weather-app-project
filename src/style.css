@@ -10,3 +10,7 @@ body {
   margin-top: 0.4rem;
   font-weight: 400;
 }
+
+#map{
+  height: 360px;
+}
