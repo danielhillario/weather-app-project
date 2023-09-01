@@ -1,17 +1,39 @@
-const { useState, useEffect } = require("react");
-const Map = require("./map");
+const { useState, useEffect, useRef } = require("react");
+const L = require("leaflet");
+
 
 const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 
 function Home() {
 
     const [data, setData] = useState(null);
-    const latlon = [3.190075,113.057491];
-    
-    // function getPosition (position) {
-    //     const pos = position.coords;
-    //     latlon.push(pos.latitude, pos.longitude);
-    // }
+    const latlon = [];
+
+
+    function getPosition (position) {
+        const pos = position.coords;
+        latlon.push(pos.latitude, pos.longitude);
+    }
+
+    function showError (error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                console.log("User denied the geolocation request");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                console.log("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                console.log("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                console.log("An unknown error occurred.");
+                break;
+        }
+    }
+
+     navigator.geolocation.getCurrentPosition(getPosition, showError);
+
 
     let divCurrCity = document.querySelector("div#currentCity");
     if (data != null) {
@@ -60,18 +82,9 @@ function Home() {
 
         let divCurrWindSpd = document.querySelector("a#currentWindSpeed");
         divCurrWindSpd.innerHTML = `${currWindSpd} km/h winds`;
+        
 
     }
-    
-    
-    // navigator.geolocation.getCurrentPosition(getPosition);
-
-    // let map = Leaf.map('map').setView([51.505, -0.09], 13);
-    // Leaf.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    // maxZoom: 19,
-    // attribution: '© OpenStreetMap'
-    // }).addTo(map);
-
 
     useEffect(async function () {
         const abortController = new AbortController();
@@ -96,7 +109,25 @@ function Home() {
         }
     
     }, []);
-    
+
+    useEffect(() => {
+        
+        let mapContainer = L.DomUtil.get('map');
+
+        if(mapContainer !== null){
+            mapContainer._leaflet_id = null;
+        }
+
+        let map = L.map('map').setView([latlon[0], latlon[1]], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([latlon[0], latlon[1]]).addTo(map);
+
+    }, []);
+
 
     return (
         <div className="container">
@@ -119,11 +150,13 @@ function Home() {
                 </div>
             </section>
 
-            <Map />
+            <div className="mx-auto mt-5 mb-5" id="map">
+
+            </div>
 
 
         </div>
-    )    
+    );    
 }
 
 module.exports = Home;
