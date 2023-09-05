@@ -30,19 +30,23 @@ function Weather() {
                 let forecastWeather = list.weather[0].main;
                 let descWeather = list.weather[0].description;
                 
-                const dateTime = dateObject.toLocaleString("en-GB", {
-                    weekday: "long",
-                    month: "long",
+                const setDate = dateObject.toLocaleString("en-GB", {
+                    weekday: "short",
+                    month: "short",
                     day: "numeric",
-                    year: "numeric",
+                    year: "numeric"
+                }); // End of dateObject
+
+                const setTime = dateObject.toLocaleString("en-GB", {
                     hour: "numeric",
                     hour12: "true",
-                    minute: "numeric",
-                }); // End of dateObject
+                    minute: "numeric"
+                });
                 
                 dataObjArr.push(
                     {
-                        time: dateTime,
+                        date: setDate,
+                        time: setTime,
                         temp: mainTemp,
                         feel: feelTemp,
                         fWeather: forecastWeather,
@@ -59,20 +63,25 @@ function Weather() {
             
             let dateColumn = document.querySelector("div#dateColumn");
             dateColumn.innerHTML = "";
-            // for (let j = 0; j < date.length; j += 1){
             for (let i = 0; i < dataObjArr.length; i += 1){
-                    // console.log(dataObjArr[i].time)
                     if (dataObjArr[i].time.match("11:00 am") !== null) {
                         let divCol = document.createElement("div");
                         divCol.className = "col";
                         divCol.innerHTML = `
-                            <div class="card h-100">
+                            <div class="card shadow">
                                 <div class="card-body">
-                                    <h5 class="card-title">${dataObjArr[i].time}</h5>
-                                    <p class="card-text">Temperature ${dataObjArr[i].temp}\u2103</p>
-                                    <p class="card-text">Feels Like ${dataObjArr[i].feel}\u2103</p>
-                                    <p class="card-text">Forecasted Weather: ${dataObjArr[i].fWeather}</p>
-                                    <p class="card-text">Description: ${dataObjArr[i].dWeather.capitalize()}</p>
+
+                                <div class="card-title fw-bold">${dataObjArr[i].date}</div>
+                                    <div class="card-subtitle mb-2 text-muted">Hello World</div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="display-1 degree">${dataObjArr[i].temp}</p>
+                                        <i class="fas fa-sun fa-5x pt-3 text-warning"></i>
+                                    </div>
+                    
+                                    <div class="d-flex justify-content-between mb-4">
+                                        <p><i class="fas fa-tint fa-lg text-info pe-2"></i><a>${dataObjArr[i].fWeather}</a></p>
+                                        <p><i class="fas fa-leaf fa-lg text-muted pe-2"></i><a>${dataObjArr[i].dWeather.capitalize()}</a></p>
+                                    </div>
                                 </div>
                             </div>       
                         `; // End of innerhtml
@@ -108,7 +117,7 @@ function Weather() {
 
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid mb-5">
             <div className="container pt-3 w-75">
                 <form className="input-group flex-nowrap" onSubmit={getCityWeather} >
                     <input className="form-control form-control-lg" type="text" placeholder="Search City" value={city} onChange={updateCity} aria-label=".form-control-lg" />

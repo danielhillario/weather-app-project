@@ -7,52 +7,37 @@ const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
 function Home() {
 
     const [data, setData] = useState(null);
-    const latlon = [];
 
-
-    function getPosition (position) {
-        const pos = position.coords;
-        latlon.push(pos.latitude, pos.longitude);
+    function findPosition(){
+        return new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+        );
     }
-
-    function showError (error) {
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                console.log("User denied the geolocation request");
-                break;
-            case error.POSITION_UNAVAILABLE:
-                console.log("Location information is unavailable.");
-                break;
-            case error.TIMEOUT:
-                console.log("The request to get user location timed out.");
-                break;
-            case error.UNKNOWN_ERROR:
-                console.log("An unknown error occurred.");
-                break;
-        }
-    }
-
-     navigator.geolocation.getCurrentPosition(getPosition, showError);
-
 
     let divCurrCity = document.querySelector("div#currentCity");
     if (data != null) {
         console.log(data);
         let currCity = data.name;
         let currTitle = document.createElement("h5");
-        currTitle.innerHTML = `Current ${currCity} Weather`;
+        currTitle.innerHTML = `${currCity}`;
         divCurrCity.append(currTitle);
         
         //GET time from api
         let unixTimeStamp = data.dt;
         const mSeconds = unixTimeStamp * 1000;
         const dateObject = new Date(mSeconds);
-        const newDateFormat = dateObject.toLocaleString(
+        const time = dateObject.toLocaleString(
             "en-GB",{
                 timeStyle: "short",
                 hour12: "true"
             }
         );
+
+        const day = dateObject.toLocaleString(
+            "en-GB",{
+                weekday: "short",
+            }
+        )
 
         //GET current weather condition
         let currWeather = data.weather;
@@ -66,7 +51,7 @@ function Home() {
 
         let divCurrWeather = document.querySelector("div#currentWeather");
         let currentWeather = document.createElement("h6");
-        currentWeather.innerHTML = `${newDateFormat}, ${currWeatherDesc}`;
+        currentWeather.innerHTML = `${day}, ${time}, ${currWeatherDesc}`;
         divCurrWeather.append(currentWeather);
 
         let divCurrTemp = document.querySelector("p#currTemp");
@@ -89,20 +74,27 @@ function Home() {
     useEffect(async function () {
         const abortController = new AbortController();
 
-        let lat = latlon[0];
-        let lon = latlon[1];
+        // Using await to get geoposition
+        try{
+            let position = await findPosition();
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
 
-        let openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?`;
-        let query = `lat=${lat}&lon=${lon}&appid=${openWeatherApiKey}&units=metric`;
-        let mounted = true;
-        fetch(openWeatherUrl + query, {
-            signal: abortController.signal,
-            method: "GET",
-        }).then(function (res) {
-            return res.json();
-        }).then(function (weatherData) {
-            setData(weatherData);
-        });
+            let openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?`;
+            let query = `lat=${lat}&lon=${lon}&appid=${openWeatherApiKey}&units=metric`;
+            let mounted = true;
+            await fetch(openWeatherUrl + query, {
+                signal: abortController.signal,
+                method: "GET",
+            }).then(function (res) {
+                return res.json();
+            }).then(function (weatherData) {
+                setData(weatherData);
+            }).catch(err => console.log(err));
+
+        } catch(err) {
+            alert('Error: ' + err.message)
+        }
 
         return function () {
             abortController.abort();
@@ -110,21 +102,30 @@ function Home() {
     
     }, []);
 
-    useEffect(() => {
-        
-        let mapContainer = L.DomUtil.get('map');
+    useEffect(async function () {
 
-        if(mapContainer !== null){
-            mapContainer._leaflet_id = null;
+        // Using await function to get geoposition
+        try {
+            let position = await findPosition();
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            let mapContainer = L.DomUtil.get('map');
+
+            if(mapContainer !== null){
+                mapContainer._leaflet_id = null;
+            }
+
+            let map = L.map('map').setView([lat, lon], 13);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            L.marker([lat, lon]).addTo(map);
+        } catch(err) {
+            alert('Error: ' + err.message)
         }
-
-        let map = L.map('map').setView([latlon[0], latlon[1]], 13);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        L.marker([latlon[0], latlon[1]]).addTo(map);
 
     }, []);
 
