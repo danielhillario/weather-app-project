@@ -10,6 +10,8 @@ function Weather() {
     function handleWeatherData(data) {
         
         if (data !== null) {
+
+            console.log(data);
             let nCity = data.city.name;
             let cCountry = data.city.country;
             
@@ -27,7 +29,8 @@ function Weather() {
                 
                 let mainTemp = Math.round(list.main.temp);
                 let feelTemp = Math.round(list.main.feels_like);
-                let forecastWeather = list.weather[0].main;
+                let weatherIcon = list.weather[0].icon;
+                let probPrecip = list.pop * 100; //probability of precipitation %
                 let descWeather = list.weather[0].description;
                 
                 const setDate = dateObject.toLocaleString("en-GB", {
@@ -49,7 +52,8 @@ function Weather() {
                         time: setTime,
                         temp: mainTemp,
                         feel: feelTemp,
-                        fWeather: forecastWeather,
+                        wIcon: weatherIcon,
+                        pPrecip: probPrecip,
                         dWeather: descWeather,
                     }); // End of array push method
 
@@ -75,11 +79,11 @@ function Weather() {
                                     <div class="card-subtitle mb-2 text-muted">Hello World</div>
                                     <div class="d-flex justify-content-between">
                                         <p class="display-1 degree">${dataObjArr[i].temp}</p>
-                                        <i class="fas fa-sun fa-5x pt-3 text-warning"></i>
+                                        <img src="https://openweathermap.org/img/wn/${dataObjArr[i].wIcon}@2x.png">                                    
                                     </div>
                     
                                     <div class="d-flex justify-content-between mb-4">
-                                        <p><i class="fas fa-tint fa-lg text-info pe-2"></i><a>${dataObjArr[i].fWeather}</a></p>
+                                        <p><i class="fas fa-tint fa-lg text-info pe-2"></i><a>${dataObjArr[i].pPrecip}% Precipitation</a></p>
                                         <p><i class="fas fa-leaf fa-lg text-muted pe-2"></i><a>${dataObjArr[i].dWeather.capitalize()}</a></p>
                                     </div>
                                 </div>

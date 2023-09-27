@@ -48,6 +48,7 @@ function Home() {
         }
         
         let currTemp = Math.round(data.main.temp);
+        let wIcon = currWeather[0].icon;
 
         let divCurrWeather = document.querySelector("div#currentWeather");
         let currentWeather = document.createElement("h6");
@@ -67,6 +68,9 @@ function Home() {
 
         let divCurrWindSpd = document.querySelector("a#currentWindSpeed");
         divCurrWindSpd.innerHTML = `${currWindSpd} km/h winds`;
+
+        let divIcon = document.querySelector("div#weatherIcon");
+        divIcon.innerHTML = `<img src="https://openweathermap.org/img/wn/${wIcon}@2x.png" />`;
         
 
     }
@@ -139,13 +143,24 @@ function Home() {
                         <div className="card-subtitle mb-2 text-muted" id="currentWeather"></div>
                         <div className="d-flex justify-content-between">
                             <p className="display-1 degree" id="currTemp"></p>
-                            <i className="fas fa-sun fa-5x pt-3 text-warning"></i>
+                            {/* <i className="fas fa-sun fa-5x pt-3 text-warning"></i> */}                       
+                            <div id="weatherIcon"></div>
                         </div>
                     
-                        <div className="d-flex justify-content-between mb-4">
-                        <p><i className="fas fa-tint fa-lg text-info pe-2"/><a id="currentHumidity" /></p>
-                        <p><i className="fas fa-leaf fa-lg text-muted pe-2"></i><a id="currentWindSpeed" /></p>
+                    <div className="container">
+                        <div className="row d-flex flex-row">
+                            <div className="col d-flex flex-column mb-3">
+                                <p><i className="fas fa-droplet fa-lg text-info pe-2"/><a id="currentHumidity" /> </p>
+                                <p><i className="fas fa-wind fa-lg text-muted pe-2"></i><a id="currentWindSpeed" /></p>
+                            </div>
+
+                            <div className="col d-flex flex-column mb-3">
+                                <p><i className="fas fa-droplet fa-lg text-info pe-2"/>Hello World</p>
+                                <p><i className="fas fa-wind fa-lg text-muted pe-2"></i>Hello World</p>
+                            </div>
                         </div>
+                    </div>
+                        
 
                     </div>
                 </div>
